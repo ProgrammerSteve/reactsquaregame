@@ -31,11 +31,10 @@ const MainComponent=()=>{
 	return(
 	<div className="mainContainer">
 		<Context.Provider value={payload}>
-					
-						<Game/>
-						<Scoreboard/>
-					
-			    	
+			<div className="flexContainer">
+				<Game/>
+				<Scoreboard/>	
+			</div>
 		</Context.Provider>
 	</div>
 

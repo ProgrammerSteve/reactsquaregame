@@ -6,9 +6,14 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: rgba(185, 156, 123,0.5);
+  height: 100%;
 }
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
 
+html, body, #root, #root>div{
+  height: 100%;
+  width: 100%;
+}

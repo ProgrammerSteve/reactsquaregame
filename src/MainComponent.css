@@ -1,4 +1,10 @@
 .mainContainer{
+height: 100%;
+display: grid;
+place-items: center;
+}
+
+.flexContainer{
   width:280px;
   display: flex;
   flex-wrap: wrap;
