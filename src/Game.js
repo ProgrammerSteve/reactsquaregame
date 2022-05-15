@@ -249,7 +249,7 @@ function Game() {
                     {{  
                       width:`${displayIncrement}px`, 
                       height:`${displayIncrement}px`,
-                      borderRadius: `12.5px`
+                      borderRadius: `${displayIncrement*0.5}px`
                     }}
                   ></div>
                 </div>
