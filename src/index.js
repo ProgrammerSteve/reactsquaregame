@@ -1,12 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import Game from './Game.js';
+import Scoreboard from './Scoreboard.js';
+import MainComponent from './MainComponent.js';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+  	<div className="indexContainer">
+  		<MainComponent/>
+    </div>
   </React.StrictMode>,
   document.getElementById('root')
 );
