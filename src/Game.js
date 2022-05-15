@@ -14,8 +14,8 @@ const handleSubmitForm=(e)=>{
 const purpleSquare=(xArr,yArr)=>{
   return(<div 
   style={{  position: `absolute`,
-            width:`${displayIncrement-2}px`, //ALTERATION 1
-            height:`${displayIncrement-2}px`, //ALETERATION 1
+            width:`${displayIncrement-4}px`, //ALTERATION 1
+            height:`${displayIncrement-4}px`, //ALETERATION 1
             backgroundColor:`purple`,
             marginLeft:`${xArr}px`,
             marginTop:`${yArr}px`,
