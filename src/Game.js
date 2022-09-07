@@ -37,8 +37,11 @@ const winningDiv=(level)=>{
       <div style={{
               zIndex: `1`,  
               position: `absolute`,
-              marginLeft:`25px`,
-              marginTop:`160px`,
+              marginInline:`auto`,
+              marginTop:`25px`,
+              backgroundColor:`maroon`,
+              color:  `white`,
+              paddingInline: `20px`
       }}>
         <h2>WINNER! Thanks For Playing!</h2>
         <h3>[Press B to start again]</h3>
