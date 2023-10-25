@@ -1,14 +1,16 @@
-.mainContainer{
-height: 100%;
-display: grid;
-place-items: center;
+.mainContainer {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle, #7666b0, #3c3b40);
 }
 
-.flexContainer{
-  width:280px;
+.flexContainer {
+  width: 280px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-content: center;
-  margin-inline:auto;
+  margin-inline: auto;
+  gap: 15px;
 }
