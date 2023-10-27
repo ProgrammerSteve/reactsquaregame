@@ -242,7 +242,7 @@ function Game() {
     setStageTime(0);
     setXPos(level !== 0 ? xArr[level - 1] : 0);
     setYPos(level !== 0 ? yArr[level - 1] : 25);
-    setCoord(...coordInitial);
+    setCoord({ ...coordInitial });
     resetStageTime();
   };
   const handleBClick = () => {
@@ -253,7 +253,7 @@ function Game() {
     setTime(0);
     setXPos(0);
     setYPos(25);
-    setCoord(...coordInitial);
+    setCoord({ ...coordInitial });
     resetAllTime();
   };
   const handleUpClick = (e) => {
