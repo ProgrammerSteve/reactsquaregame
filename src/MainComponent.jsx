@@ -1,7 +1,7 @@
 import React,{useState, createContext} from "react";
 import "./MainComponent.css";
-import Game from './Game.js';
-import Scoreboard from './Scoreboard.js';
+import Game from './game';
+import Scoreboard from './Scoreboard.jsx';
 
 export const Context = createContext();
 

@@ -1,124 +1,58 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
-import { Motion, spring, presets } from "react-motion";
-import { Context } from "./MainComponent.js";
-import { coeff } from "./movement.js";
-import { stageconst } from "./stagesetup.js";
+
+//import { motion, useSpring } from 'framer-motion';
+import { Context } from "../MainComponent.jsx";
+import { coeff } from "../movement.js";
+import { stageconst } from "../stagesetup.js";
+import PurpleSquare from "./PurpleSquare.jsx";
+import EvilSquare from "./EvilSquare.jsx";
 import "./Game.css";
+import WinningDiv from "./WinningDiv.jsx";
+import { useScoreContext } from "../context/ScoreContext.js";
 
 const displayIncrement = 20; // sets the pixel basis
-
-const handleSubmitForm = (e) => {
-  e.preventDefault();
-};
-const purpleSquare = (xArr, yArr) => {
-  return (
-    <div
-      style={{
-        position: `absolute`,
-        width: `${displayIncrement - 4}px`, //ALTERATION 1
-        height: `${displayIncrement - 4}px`, //ALETERATION 1
-        backgroundColor: `purple`,
-        marginLeft: `${xArr}px`,
-        marginTop: `${yArr}px`,
-        border: `2px solid black`,
-      }}
-    />
-  );
-};
-//The purple squares mapped out from Coord state
-const evilSquare = (level, coord) => {
-  const elements = [];
-  coord[`stage${level}`].map((pos) => {
-    elements.push(purpleSquare(pos[0], pos[1]));
-  });
-  return elements;
-};
-//appears when game is completed
-const winningDiv = (level) => {
-  if (level === 6) {
-    return (
-      <div
-        style={{
-          zIndex: `1`,
-          position: `absolute`,
-          top: 0,
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: "100%",
-          width: "100%",
-          backgroundColor: "rgba(0,0,0,0.4)",
-
-          display: "grid",
-          placeItems: "center",
-          color: `white`,
-          textShadow:
-            "-1px -1px 0 #000,0 -1px 0 #000,1px -1px 0 #000,1px 0 0 #000,1px 1px 0 #000,0 1px 0 #000,-1px 1px 0 #000,-1px 0 0 #000",
-        }}
-      >
-        <h2 style={{ fontWeight: "700", paddingInline: 20 }}>
-          WINNER! Thanks For Playing!
-        </h2>
-        <h3>[Press B to start again]</h3>
-      </div>
-    );
-  }
-};
+const handleSubmitForm = (e) => e.preventDefault()
 
 function Game() {
-  //position
-  const [xPos, setXPos] = useState(0);
-  const [yPos, setYPos] = useState(25); //this should stay the same
-  //Yellow square locations
-  // const [xArr,setXArr]=useState([75,25,250,75,25,200,-200]);
-  // const [yArr,setYArr]=useState([200,50,200,50,250,50,-200]);
-  const [xArr, setXArr] = useState(
-    [3, 1, 10, 3, 1, 8, -8].map((num) => num * displayIncrement)
-  ); //ALTERATION 1
-  const [yArr, setYArr] = useState(
-    [7, 1, 7, 1, 9, 1, -9].map((num) => num * displayIncrement + 25)
-  ); //ALTERATION 1
+let {
+    xPos,handleXPos,
+    yPos,handleYPos,
+    xArr,handleXArr,
+    yArr,handleYArr,
+    
+    coord,handleCoord,
+    coordInitial,handleCoordInitial,
+    
+    score,setScore,
+    level,setlevel, 
+    time, setTime, 
+    stageTime,setStageTime,
+    toggle,setToggle,
+    stageToggle,setStageToggle,
+    stageScores,setStageScores,
+    stageTimes, setStageTimes,
+}=useScoreContext
 
-  //The purple block coordinates
-  const [coord, setCoord] = useState(stageconst(displayIncrement));
-  //initial value of coor
-  const [coordInitial, setCoordInitial] = useState(
-    stageconst(displayIncrement)
-  );
 
-  //game mechanics state imported from the context
-  const {
-    score,
-    setScore,
-    level,
-    setlevel,
-    time,
-    setTime,
-    stageTime,
-    setStageTime,
-    toggle,
-    setToggle,
-    stageToggle,
-    setStageToggle,
-    stageScores,
-    setStageScores,
-    stageTimes,
-    setStageTimes,
-  } = useContext(Context);
+
 
   // const[level, setlevel]= useState(0);
   const [moveIncrement, setMoveIncrement] = useState(displayIncrement);
   const [startMove, setMove] = useState([false, false, false, false]);
   let timeIncrement = 50; //Used for the setTimeout for the D-pad button inputs
   //for React-Motion
-  const initialStyle = {
-    opacity: spring(1),
-    translateX: spring(xPos, presets.wobbly),
-    translateY: spring(yPos, presets.wobbly),
-  };
-
+  // const initialStyle = {
+  //   opacity: spring(1),
+  //   translateX: spring(xPos, presets.wobbly),
+  //   translateY: spring(yPos, presets.wobbly),
+  // };
   //time
   const stageRef = useRef(null);
+//   const springProps = useSpring({
+//     opacity: 1,
+//     translateX: startMove[0] ? 0 + xPos : startMove[1] ? displayIncrement + xPos : startMove[2] ? 0 + xPos : startMove[3] ? xPos - displayIncrement : xPos,
+//     translateY: startMove[0] ? yPos - displayIncrement : startMove[1] ? 0 + yPos : startMove[2] ? displayIncrement + yPos : startMove[3] ? 0 + yPos : yPos,
+//   });
 
   useEffect(() => {
     stageRef.current = setInterval(() => {
@@ -348,11 +282,38 @@ function Game() {
               marginTop: `${yArr[level]}px`,
             }}
           />
+          <EvilSquare level={level < 6 ? level : 5} coord={coord} displayIncrement={displayIncrement}/>
+          {level === 6 && <WinningDiv level={level}/>}
 
-          {evilSquare(level < 6 ? level : 5, coord)}
-          {winningDiv(level)}
 
-          <Motion
+
+
+
+
+
+          {/* <motion.div animate={springProps}>
+        {(interpolatedStyles) => (
+          <div
+            style={{
+              transform: `translate(${interpolatedStyles.translateX}px, ${interpolatedStyles.translateY}px)`,
+              opacity: interpolatedStyles.opacity,
+            }}
+          >
+            <div
+              className="player"
+              style={{
+                width: `${displayIncrement}px`,
+                height: `${displayIncrement}px`,
+                borderRadius: `${displayIncrement * 0.5}px`,
+              }}
+            ></div>
+          </div>
+        )}
+      </motion.div> */}
+
+
+
+          {/* <motion.div
             style={
               startMove[0]
                 ? {
@@ -398,7 +359,17 @@ function Game() {
                 ></div>
               </div>
             )}
-          </Motion>
+          </motion.div> */}
+
+
+
+
+
+
+
+
+
+
         </div>
         <div className="buttonLayout">
           <div className="dPad">
