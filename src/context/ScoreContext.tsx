@@ -5,9 +5,10 @@ const displayIncrement = 20; // sets the pixel basis
 const stageInitialCoordinates:Coord=stageconst(displayIncrement)
 
 interface IProps extends React.PropsWithChildren<{}> {}
-interface Coord {
+export interface Coord {
   [key: string]: number[][];
 }
+
 
 interface ScoreContextValue {
     score:number;			
