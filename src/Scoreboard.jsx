@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { Context } from "./MainComponent.js";
+import { Context } from "./MainComponent.jsx";
 import "./Scoreboard.css";
 
 const Scoreboard = () => {
