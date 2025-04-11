@@ -1,80 +1,56 @@
-import React, { useEffect, useState, useRef, useContext, ReactNode } from "react";
+import React, { useEffect, useState, useRef, useContext, ReactNode, useLayoutEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Context } from "./MainComponent";
 import { coeff } from "./movement";
+import PurpleSquare from "./PurpleSquare";
+import WinningDiv from "./WinningDiv";
 import { stageconst, stageCoords, stageKey, stageName } from "./stagesetup";
 import "./Game.css";
 
 type ElementList = (ReactNode | null)[];
 
-const displayIncrement = 20; // sets the pixel basis
 
-// const handleSubmitForm = (e:React.FormEvent<HTMLFormElement>) => {
-//   e.preventDefault();
-// };
 
-const purpleSquare = (xArr:number, yArr:number, key:string|number) => {
-  return (
-    <div
-      key={key}
-      style={{
-        position: `absolute`,
-        width: `${displayIncrement - 4}px`,
-        height: `${displayIncrement - 4}px`,
-        backgroundColor: `purple`,
-        marginLeft: `${xArr}px`,
-        marginTop: `${yArr}px`,
-        border: `2px solid black`,
-      }}
-    />
-  );
-};
-
-const evilSquare = (level:number, coord:stageCoords) => {
-  const elements:ElementList = [];
-  if (level < 0 || level > 6) return elements;
-  let name:stageName=`stage${level}` as stageName
-  let stage:number[][] = coord[name];
-  stage.map((pos,index) => {
-    elements.push(purpleSquare(pos[0], pos[1],`purple-${level}-${index}`));
-  });
-  return elements;
-};
-
-const winningDiv = (level:number) => {
-
-  if (level < 0 || level > 6) return null;
-  let confirmedLevel = level as stageKey;
-  if (confirmedLevel === 6) {
-    return (
-      <div
-        style={{
-          zIndex: `1`,
-          position: `absolute`,
-          top: 0,
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: "100%",
-          width: "100%",
-          backgroundColor: "rgba(0,0,0,0.4)",
-          display: "grid",
-          placeItems: "center",
-          color: `white`,
-          textShadow:
-            "-1px -1px 0 #000,0 -1px 0 #000,1px -1px 0 #000,1px 0 0 #000,1px 1px 0 #000,0 1px 0 #000,-1px 1px 0 #000,-1px 0 0 #000",
-        }}
-      >
-        <h2 style={{ fontWeight: "700", paddingInline: 20 }}>
-          WINNER! Thanks For Playing!
-        </h2>
-        <h3>[Press B to start again]</h3>
-      </div>
-    );
-  }
-};
 
 function Game() {
+const [displayIncrement, setDisplayIncrement] = useState(20); // default
+const prevIncrement = useRef(displayIncrement);
+
+useLayoutEffect(() => {
+  const updateIncrement = () => {
+    if (window.innerWidth < 350) {
+      setDisplayIncrement(16);
+    } else {
+      setDisplayIncrement(20);
+    }
+  };
+
+  updateIncrement(); // set initially
+  window.addEventListener("resize", updateIncrement); // also update on resize
+
+  return () => {
+    window.removeEventListener("resize", updateIncrement);
+  };
+}, []);
+
+
+
+
+
+
+
+
+  const generateBadSquare = (displayIncrement:number, level:number, coord:stageCoords) => {
+    const elements:ElementList = [];
+    if (level < 0 || level > 6) return elements;
+    let name:stageName=`stage${level}` as stageName
+    let stage:number[][] = coord[name];
+    stage.map((pos,index) => {
+      elements.push(PurpleSquare(displayIncrement,pos[0], pos[1],`purple-${level}-${index}`));
+    });
+    return elements;
+  };
+
   const [xPos, setXPos] = useState(0);
   const [yPos, setYPos] = useState(25);
   const [xArr, setXArr] = useState(
@@ -106,42 +82,42 @@ function Game() {
     setStageTimes,
   } = useContext(Context);
 
-  const [moveIncrement, setMoveIncrement] = useState(displayIncrement);
+  // const [moveIncrement, setMoveIncrement] = useState(displayIncrement);
   const [startMove, setMove] = useState([false, false, false, false]);
   let timeIncrement = 50;
 
   // Animation variants for framer-motion
-  const motionVariants = {
-    initial: {
-      x: xPos,
-      y: yPos,
-      opacity: 1,
-    },
-    up: {
-      x: xPos,
-      y: yPos - displayIncrement,
-      opacity: 1,
-      transition: { type: "spring", stiffness: 200, damping: 15 }
-    },
-    right: {
-      x: xPos + displayIncrement,
-      y: yPos,
-      opacity: 1,
-      transition: { type: "spring", stiffness: 200, damping: 15 }
-    },
-    down: {
-      x: xPos,
-      y: yPos + displayIncrement,
-      opacity: 1,
-      transition: { type: "spring", stiffness: 200, damping: 15 }
-    },
-    left: {
-      x: xPos - displayIncrement,
-      y: yPos,
-      opacity: 1,
-      transition: { type: "spring", stiffness: 200, damping: 15 }
-    }
-  };
+  // const motionVariants = {
+  //   initial: {
+  //     x: xPos,
+  //     y: yPos,
+  //     opacity: 1,
+  //   },
+  //   up: {
+  //     x: xPos,
+  //     y: yPos - displayIncrement,
+  //     opacity: 1,
+  //     transition: { type: "spring", stiffness: 200, damping: 15 }
+  //   },
+  //   right: {
+  //     x: xPos + displayIncrement,
+  //     y: yPos,
+  //     opacity: 1,
+  //     transition: { type: "spring", stiffness: 200, damping: 15 }
+  //   },
+  //   down: {
+  //     x: xPos,
+  //     y: yPos + displayIncrement,
+  //     opacity: 1,
+  //     transition: { type: "spring", stiffness: 200, damping: 15 }
+  //   },
+  //   left: {
+  //     x: xPos - displayIncrement,
+  //     y: yPos,
+  //     opacity: 1,
+  //     transition: { type: "spring", stiffness: 200, damping: 15 }
+  //   }
+  // };
 
   const stageRef = useRef<number | null>(null);
 
@@ -183,63 +159,140 @@ function Game() {
     );
   }, [level]);
 
+
+
+
+
+
+useEffect(() => {
+  if (xPos === xArr[Math.min(level,6)] && yPos === yArr[Math.min(level,6)]) {
+    setlevel((prev) => Math.min(prev + 1,6));
+    setScore((prev) => prev + 25);
+  }
+}, [xPos, yPos, level]);
+useEffect(() => {
+  const currentStage = coord[`stage${Math.min(level,6)}` as stageName];
+  const isBad = currentStage.some(([x, y]) => x === xPos && y === yPos);
+  if (isBad) {
+    setScore((prev) => (level < 6 ? prev - 10 : prev));
+  }
+}, [xPos, yPos, level, coord]);
+useEffect(() => {
+  const line1 = [...coordInitial[`stage${Math.min(level,6)}` as stageName]].slice(0, 7);
+  const line2 = [...coordInitial[`stage${Math.min(level,6)}` as stageName]].slice(7, 14);
+
+  const patternIndex = stageTime % coeff[Math.min(level,6)].length;
+  const [[c1, c2], [c3, c4]] = coeff[Math.min(level,6)][patternIndex];
+
+  const newCoords: stageCoords = {
+    ...coord,
+    [`stage${level}`]: [
+      ...line1.map(([x, y]) => [x + displayIncrement * c1, y + displayIncrement * c2]),
+      ...line2.map(([x, y]) => [x + displayIncrement * c3, y + displayIncrement * c4]),
+    ],
+  };
+
+  setCoord(newCoords);
+}, [stageTime]);
+
+
+
+
+
+
+
+
+  // useEffect(() => {
+  //   if (xPos === xArr[level] && yPos === yArr[level]) {
+  //     setlevel(level + 1);
+  //     setScore(score + 25);
+  //   }
+
+  //   if (
+  //     coord[`stage${level}` as stageName].reduce((acc, num) => {
+  //       if (num[0] === xPos && num[1] === yPos) {
+  //         return acc + 1;
+  //       } else {
+  //         return acc;
+  //       }
+  //     }, 0) > 0
+  //   ) {
+  //     setScore(level < 6 ? score - 10 : score);
+  //   }
+
+  //   for (let i = 0; i < 6; i++) {
+  //     const line1 = [...coordInitial[`stage${i}` as stageName]].slice(0, 6);
+  //     const line2 = [...coordInitial[`stage${i}` as stageName]].slice(7, 14);
+  //     if (level === i) {
+  //       for (let j = 0; j < coeff[i].length; j++) {
+  //         if (stageTime % coeff[i].length === j) {
+  //           let c1 = coeff[i][j][0][0];
+  //           let c2 = coeff[i][j][0][1];
+  //           let c3 = coeff[i][j][1][0];
+  //           let c4 = coeff[i][j][1][1];
+
+  //           let obj:Partial<stageCoords> = {};
+  //           obj[`stage${i}` as stageName] = [
+  //             ...line1.map((num) => {
+  //               return [
+  //                 num[0] + displayIncrement * c1,
+  //                 num[1] + displayIncrement * c2,
+  //               ];
+  //             }),
+  //             ...line2.map((num) => {
+  //               return [
+  //                 num[0] + displayIncrement * c3,
+  //                 num[1] + displayIncrement * c4,
+  //               ];
+  //             }),
+  //           ];
+
+  //           let newObj = {
+  //             ...coordInitial,
+  //             ...obj,
+  //           };
+  //           return setCoord({
+  //             ...newObj,
+  //           });
+  //         }
+  //       }
+  //     }
+  //   }
+  // }, [xPos, yPos, stageTime]);
+
+
+const spring = { type: "spring", stiffness: 200, damping: 15 };
+
+const motionVariants = useMemo(() => ({
+  initial: { x: xPos, y: yPos, opacity: 1 },
+  up: { x: xPos, y: yPos - displayIncrement, opacity: 1, transition: spring },
+  right: { x: xPos + displayIncrement, y: yPos, opacity: 1, transition: spring },
+  down: { x: xPos, y: yPos + displayIncrement, opacity: 1, transition: spring },
+  left: { x: xPos - displayIncrement, y: yPos, opacity: 1, transition: spring },
+}), [displayIncrement]);
+
+
+
+
   useEffect(() => {
-    if (xPos === xArr[level] && yPos === yArr[level]) {
-      setlevel(level + 1);
-      setScore(score + 25);
-    }
+  setCoord(stageconst(displayIncrement));
+  setCoordInitial(stageconst(displayIncrement));
+  setXArr([3, 1, 10, 3, 1, 8, -8].map((num) => num * displayIncrement));
+  setYArr([7, 1, 7, 1, 9, 1, -9].map((num) => num * displayIncrement + 25));
+}, [displayIncrement]);
 
-    if (
-      coord[`stage${level}` as stageName].reduce((acc, num) => {
-        if (num[0] === xPos && num[1] === yPos) {
-          return acc + 1;
-        } else {
-          return acc;
-        }
-      }, 0) > 0
-    ) {
-      setScore(level < 6 ? score - 10 : score);
-    }
+// When displayIncrement changes, adjust current positions
+useEffect(() => {
+  const scale = displayIncrement / prevIncrement.current;
+  setXPos((prev) => prev * scale);
+  setYPos((prev) => (prev-25) * scale + 25);
+  prevIncrement.current = displayIncrement;
+}, [displayIncrement]);
 
-    for (let i = 0; i < 6; i++) {
-      const line1 = [...coordInitial[`stage${i}` as stageName]].slice(0, 6);
-      const line2 = [...coordInitial[`stage${i}` as stageName]].slice(7, 14);
-      if (level === i) {
-        for (let j = 0; j < coeff[i].length; j++) {
-          if (stageTime % coeff[i].length === j) {
-            let c1 = coeff[i][j][0][0];
-            let c2 = coeff[i][j][0][1];
-            let c3 = coeff[i][j][1][0];
-            let c4 = coeff[i][j][1][1];
 
-            let obj:Partial<stageCoords> = {};
-            obj[`stage${i}` as stageName] = [
-              ...line1.map((num) => {
-                return [
-                  num[0] + displayIncrement * c1,
-                  num[1] + displayIncrement * c2,
-                ];
-              }),
-              ...line2.map((num) => {
-                return [
-                  num[0] + displayIncrement * c3,
-                  num[1] + displayIncrement * c4,
-                ];
-              }),
-            ];
-
-            let newObj = {
-              ...coordInitial,
-              ...obj,
-            };
-            return setCoord({
-              ...newObj,
-            });
-          }
-        }
-      }
-    }
-  }, [xPos, yPos, stageTime]);
+//   const badSquares = useMemo(() => {
+//   return generateBadSquare(displayIncrement, level < 6 ? level : 5, coord);
+// }, [displayIncrement, level, coord]);
 
   const resetAllTime = () => {
     clearInterval(stageRef.current||undefined);
@@ -358,12 +411,15 @@ function Game() {
             height: `${displayIncrement * 11 + 25}px`,
           }}
         >
+          <div style={{height:25, position: `absolute`, width: `100%`, top: 0, left: 0, display: "flex", alignItems: "center", justifyContent: "center"}}>
           <p id="score">
             Score:{score < -999 ? -999 : score} / Lv:{level + 1} / X:{xPos} Y:
             {yPos} / Time:{stageTime > 999 ? 999 : level === 6 ? 0 : stageTime}{" "}
             / Total:{time > 999 ? 999 : time}
           </p>
           <div id="line" />
+          </div>
+
 
           <div
             style={{
@@ -371,15 +427,19 @@ function Game() {
               width: `${displayIncrement}px`,
               height: `${displayIncrement}px`,
               backgroundColor: `yellow`,
-              marginLeft: `${xArr[level]}px`,
-              marginTop: `${yArr[level]}px`,
+              marginLeft: `${xArr[Math.min(level,6)]}px`,
+              marginTop: `${yArr[Math.min(level,6)]}px`,
             }}
           />
 
-          {evilSquare(level < 6 ? level : 5, coord)}
-          {winningDiv(level)}
+          
+          {
+          generateBadSquare(displayIncrement, level < 6 ? level : 5, coord)
+          }
+          {WinningDiv(level)}
 
-          <motion.div
+          {/* <motion.div
+       
             variants={motionVariants}
             animate={
               startMove[0]
@@ -401,7 +461,18 @@ function Game() {
                 borderRadius: `${displayIncrement * 0.5}px`,
               }}
             ></div>
-          </motion.div>
+          </motion.div> */}
+
+          <motion.div
+  className="player"
+  animate={{ x: xPos, y: yPos }}
+  transition={{ type: "spring", stiffness: 200, damping: 15 }}
+  style={{
+    width: `${displayIncrement}px`,
+    height: `${displayIncrement}px`,
+    borderRadius: `${displayIncrement * 0.5}px`,
+  }}
+/>
         </div>
         <div className="buttonLayout">
           <div className="dPad">
