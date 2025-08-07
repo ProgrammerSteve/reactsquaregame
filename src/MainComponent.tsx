@@ -2,6 +2,7 @@ import React,{useState, createContext} from "react";
 import "./MainComponent.css";
 import Game from './Game';
 import Scoreboard from './Scoreboard';
+import MusicToggle from "./MusicToggle";
 
 export interface IPayload {
 	score: number;
@@ -68,8 +69,15 @@ const MainComponent=()=>{
 	<div className="mainContainer">
 		<Context.Provider value={payload}>
 			<div className="flexContainer">
+				<div style={{ height: 20, display: "flex", alignItems: "center", backgroundColor: "#282c34", padding: "0 10px", color: "white" }}>
+					<div style={{ flex: 1, display: "flex", alignItems: "center", height: "100%" }}>
+						<h1 style={{ fontSize: "1rem", margin: 0, lineHeight: "20px" }}>React Square Game</h1>
+					</div>
+					<MusicToggle/>
+				</div>
 				<Game/>
 				<Scoreboard/>	
+				
 			</div>
 		</Context.Provider>
 	</div>
